@@ -96,6 +96,7 @@ public class TrelloClientTest {
         List<TrelloBoardDto> resultList = trelloClient.getTrelloBoards();
         //Then
         Assert.assertNotNull(resultList);
+        Assert.assertEquals(0, resultList.size());
     }
 
 }
