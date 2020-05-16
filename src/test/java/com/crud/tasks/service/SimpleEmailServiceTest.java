@@ -24,13 +24,13 @@ public class SimpleEmailServiceTest {
     @Test
     public void shouldSendMail() {
         //Given
-        Mail mail = new Mail("test@test.com", "Test", "Test", null);
+        Mail mail = new Mail("test@test.com", "Test", "Test", "testCC@test.com");
         //When
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo(mail.getEmailReceiver());
         simpleMailMessage.setSubject(mail.getSubject());
         simpleMailMessage.setText(mail.getMessage());
-        if (mail.getToCc() != null || !mail.getToCc().trim().equals((""))) {
+        if (mail.getToCc() != null) {
             simpleMailMessage.setCc(mail.getToCc());
         }
         simpleEmailService.send(mail);
