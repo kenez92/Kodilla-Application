@@ -4,9 +4,12 @@ import com.crud.tasks.domain.Mail;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
@@ -14,6 +17,8 @@ import org.springframework.stereotype.Service;
 public class SimpleEmailService {
     private final JavaMailSender javaMailSender;
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleMailMessage.class);
+    @Autowired
+    private MailCreatorService mailCreatorService;
 
     public void send(final Mail mail) {
 
@@ -37,6 +42,23 @@ public class SimpleEmailService {
             mailMessage.setCc(mail.getToCc());
             LOGGER.info("Cc set to: {}", mail.getToCc());
         }
+        return mailMessage;
+    }
+
+    private MimeMessagePreparator createMimeMessage(final Mail mail) {
+        return mimeMessage -> {
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+            messageHelper.setTo(mail.getEmailReceiver());
+            messageHelper.setSubject(mail.getSubject());
+            messageHelper.setText(mailCreatorService.buildTrelloCardEmail(mail.getMessage()), true);
+        };
+    }
+
+    private SimpleMailMessage createMailMessage(final Mail mail) {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(mail.getEmailReceiver());
+        mailMessage.setSubject(mail.getSubject());
+        mailMessage.setText(mailCreatorService.buildTrelloCardEmail(mail.getMessage()));
         return mailMessage;
     }
 
