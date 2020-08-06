@@ -38,7 +38,7 @@ class TrelloControllerTestSuite {
         Mockito.when(trelloFacade.fetchTrelloBoards()).thenReturn(trelloBoards);
         //When & Then
         mockMvc.perform(MockMvcRequestBuilders
-                .get("/v1/trello/getTrelloBoards")
+                .get("/v1/trello/boards")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(0)));
@@ -55,7 +55,7 @@ class TrelloControllerTestSuite {
 
         Mockito.when(trelloFacade.fetchTrelloBoards()).thenReturn(trelloBoards);
         //When & Then
-        mockMvc.perform(MockMvcRequestBuilders.get("/v1/trello/getTrelloBoards")
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/trello/boards")
                 .contentType(MediaType.APPLICATION_JSON))
                 // trello board fields
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
@@ -78,7 +78,7 @@ class TrelloControllerTestSuite {
         Gson gson = new Gson();
         String jsonContent = gson.toJson(trelloCardDto);
         //When & Then
-        mockMvc.perform(MockMvcRequestBuilders.post("/v1/trello/createTrelloCard")
+        mockMvc.perform(MockMvcRequestBuilders.post("/v1/trello/cards")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(jsonContent))

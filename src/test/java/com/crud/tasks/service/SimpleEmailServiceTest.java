@@ -1,6 +1,7 @@
 package com.crud.tasks.service;
 
 import com.crud.tasks.domain.Mail;
+import com.crud.tasks.domain.MailType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -25,7 +26,7 @@ public class SimpleEmailServiceTest {
     @Test
     public void shouldSendMail() {
         //Given
-        Mail mail = new Mail("test@test.com", "Test", "Test", "testCC@test.com");
+        Mail mail = new Mail("test@test.com", "Test", "Test", "testCC@test.com", MailType.SCHEDULED_MAIL);
         //When
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo(mail.getEmailReceiver());

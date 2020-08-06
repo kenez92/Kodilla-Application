@@ -44,7 +44,7 @@ class TaskControllerTestSuite {
         tasks.add(createTask());
         Mockito.when(dbService.getAllTasks()).thenReturn(tasks);
         //When & Then
-        mockMvc.perform(MockMvcRequestBuilders.get("/v1/task/getTasks").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/tasks").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.is(1)))
@@ -58,7 +58,7 @@ class TaskControllerTestSuite {
         Optional<Task> task = Optional.of(createTask());
         Mockito.when(dbService.getTask(ArgumentMatchers.anyLong())).thenReturn(task);
         //When & Then
-        mockMvc.perform(MockMvcRequestBuilders.get("/v1/task/getTask?taskId=3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/tasks/3")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect((MockMvcResultMatchers.status().isOk()))
                 .andExpect((MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1))))
@@ -69,7 +69,7 @@ class TaskControllerTestSuite {
     @Test
     public void testDeleteTask() throws Exception {
         //Given & When & Then
-        mockMvc.perform(MockMvcRequestBuilders.delete("/v1/task/deleteTask?taskId=3")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/v1/tasks/3")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -81,7 +81,7 @@ class TaskControllerTestSuite {
         Gson gson = new Gson();
         String jsonContent = gson.toJson(createTask());
         //When & Then
-        mockMvc.perform(MockMvcRequestBuilders.put("/v1/task/updateTask")
+        mockMvc.perform(MockMvcRequestBuilders.put("/v1/tasks/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(jsonContent))
@@ -98,7 +98,7 @@ class TaskControllerTestSuite {
         Gson gson = new Gson();
         String jsonContent = gson.toJson(createTask());
         //When & Then
-        mockMvc.perform(MockMvcRequestBuilders.post("/v1/task/createTask")
+        mockMvc.perform(MockMvcRequestBuilders.post("/v1/tasks/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(jsonContent))
