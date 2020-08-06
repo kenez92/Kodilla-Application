@@ -1,10 +1,7 @@
 package com.crud.tasks.service;
 
 import com.crud.tasks.config.AdminConfig;
-import com.crud.tasks.domain.CreatedTrelloCardDto;
-import com.crud.tasks.domain.Mail;
-import com.crud.tasks.domain.TrelloBoardDto;
-import com.crud.tasks.domain.TrelloCardDto;
+import com.crud.tasks.domain.*;
 import com.crud.tasks.trello.client.TrelloClient;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +32,8 @@ public class TrelloService {
                 adminConfig.getEmail(),
                 SUBJECT,
                 "New card : " + trelloCardDto.getName() + " has been created on you trello account",
-                null)));
+                null,
+                MailType.TRELLO_MAIL)));
 
         return newCard;
     }

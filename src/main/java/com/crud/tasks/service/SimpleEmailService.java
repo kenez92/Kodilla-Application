@@ -1,6 +1,7 @@
 package com.crud.tasks.service;
 
 import com.crud.tasks.domain.Mail;
+import com.crud.tasks.domain.MailType;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,28 +22,14 @@ public class SimpleEmailService {
     private MailCreatorService mailCreatorService;
 
     public void send(final Mail mail) {
-
         LOGGER.info("Starting mail preparation ! ");
-        SimpleMailMessage mailMessage = createMail(mail);
         try {
-            javaMailSender.send(mailMessage);
+            javaMailSender.send(createMimeMessage(mail));
             LOGGER.info("Mail has been sent");
         } catch (MailException e) {
-            LOGGER.info("Failed to sent mail:{}", mailMessage);
+            LOGGER.info("Failed to sent mail:{}", mail);
             LOGGER.info("Exception: {}", e);
         }
-    }
-
-    private SimpleMailMessage createMail(final Mail mail) {
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(mail.getEmailReceiver());
-        mailMessage.setSubject(mail.getSubject());
-        mailMessage.setText(mail.getMessage());
-        if (mail.getToCc() != null) {
-            mailMessage.setCc(mail.getToCc());
-            LOGGER.info("Cc set to: {}", mail.getToCc());
-        }
-        return mailMessage;
     }
 
     private MimeMessagePreparator createMimeMessage(final Mail mail) {
@@ -50,7 +37,11 @@ public class SimpleEmailService {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setTo(mail.getEmailReceiver());
             messageHelper.setSubject(mail.getSubject());
-            messageHelper.setText(mailCreatorService.buildTrelloCardEmail(mail.getMessage()), true);
+            if (mail.getMailType().equals(MailType.TRELLO_MAIL)) {
+                messageHelper.setText(mailCreatorService.buildTrelloCardEmail(mail.getMessage()), true);
+            } else if (mail.getMailType().equals(MailType.SCHEDULED_MAIL)) {
+                messageHelper.setText(mailCreatorService.buildScheduledEmail(mail.getMessage()), true);
+            }
         };
     }
 
